@@ -1,19 +1,35 @@
 #!/usr/bin/env python2
 
-from datetime import date, timedelta
+import argparse
+import ConfigParser
+from datetime import datetime, timedelta
 import csv
 import gzip
 import os
+import pytz
 import simplejson as json
 import subprocess
+import sys
 from urlparse import urlparse
+
+# Command line arguments
+parser = argparse.ArgumentParser(description='Batch SSL grade query.')
+parser.add_argument('-c', '--config', help='Congfiguration file for %(prog)s', default='script.conf')
+parser.add_argument('-q', '--quiet', help='Run quiet', action='store_true', default=False)
+args = parser.parse_args()
+
+# Configuration
+config = ConfigParser.SafeConfigParser({'timezone': 'utc'})
+config.read(args.config)
+
+QUIET = args.quiet
 
 # Command line arguments for the ssllabs scan
 # For more info, check `./ssllabs-scan -help`
-sslcmd = ["./ssllabs-scan", "-quiet=true", "-usecache=true", "-maxage=2"]
+sslcmd = [config.get('Scrape', 'ssllabsbin'),  "-quiet=true", "-usecache=true", "-maxage=2"]
 
 # Set output directory
-today = date.today()
+today = datetime.now(pytz.timezone(config.get('Common', 'timezone'))).date()
 outdir = str(today)
 
 def getServerAssessment(serverName=None):
@@ -45,7 +61,8 @@ def getServerAssessment(serverName=None):
         f = gzip.open(filename, 'wb')
         f.write(json.dumps(resultsjson))
         f.close()
-    print("Done: "+serverName)
+    if not QUIET:
+        print("Done: "+serverName)
 
 def loadServerList(inputFile='servers.csv', httpsonly=True):
     """ Load list of servers to check from configuration.
