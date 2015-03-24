@@ -47,7 +47,7 @@ def getServerAssessment(serverName=None):
         f.close()
     print("Done: "+serverName)
 
-def loadServerList(inputFile='servers.csv'):
+def loadServerList(inputFile='servers.csv', httpsonly=True):
     """ Load list of servers to check from configuration.
 
     Keyword arguments:
@@ -60,10 +60,9 @@ def loadServerList(inputFile='servers.csv'):
             name, url = row
             if url:
                 host = urlparse(url)
-                if host.scheme == 'https':
+                if not httpsonly or host.scheme == 'https':
                     servers += [host.netloc]
     return servers
-
 
 if __name__ == '__main__':
     from multiprocessing import Pool
