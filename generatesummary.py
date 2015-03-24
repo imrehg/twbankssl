@@ -74,7 +74,7 @@ if __name__ == '__main__':
                 grade = e['grade']
             except KeyError:
                 grade = 'X'
-                
+
             try:
                 warnings = e['hasWarnings']
             except KeyError:
@@ -95,8 +95,8 @@ if __name__ == '__main__':
             except KeyError:
                 beast = None
 
-            ends += [{'grade': grade, 
-                      'ipAddress': e['ipAddress'], 
+            ends += [{'grade': grade,
+                      'ipAddress': e['ipAddress'],
                       'hasWarnings': warnings,
                       'statusMessage': e['statusMessage'],
                       'rc4': rc4,
