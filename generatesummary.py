@@ -4,7 +4,7 @@ Generates JSON output from the SSL Labs test data scrape
 
 Run it something like this: `./generatesummary.py > ssltest.json`
 """
-from datetime import date, timedelta
+from datetime import datetime, timedelta
 import csv
 import gzip
 import os
@@ -29,12 +29,24 @@ def loadServerList(inputFile='servers.csv', httpsOnly=True):
     return sites
 
 if __name__ == '__main__':
+    import argparse
+    import ConfigParser
+    import pytz
 
-    sites = loadServerList(httpsOnly=False)
-    today = date.today()
+    # Command line arguments
+    parser = argparse.ArgumentParser(description='Batch SSL grade query.')
+    parser.add_argument('-c', '--config', help='Congfiguration file for %(prog)s', default='script.conf')
+    args = parser.parse_args()
+
+    # Configuration
+    config = ConfigParser.SafeConfigParser({'timezone': 'utc'})
+    config.read(args.config)
+
+    today = datetime.now(pytz.timezone(config.get('Common', 'timezone'))).date()
     indir = str(today)
     output = {"update": str(today)};
     results = []
+    sites = loadServerList(httpsOnly=False)
     for s in sites:
         serverName = s['url']
         filename = os.path.join(indir, serverName + ".json.gz")
