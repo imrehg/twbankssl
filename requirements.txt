@@ -1,0 +1,2 @@
+pytz==2015.2
+simplejson==3.6.5
