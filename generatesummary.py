@@ -28,14 +28,13 @@ def loadServerList(inputFile='servers.csv', httpsOnly=True):
                     sites += [{'url': host.netloc, 'name': name, 'link': link}]
     return sites
 
-def parsedate(site, date):
+def parsedate(site, indir):
     """ Calculat scores for a site and a specific date
 
     Keyword arguments:
     site -- site data dict
-    date -- datetime.date in question
+    indir -- data directory
     """
-    indir = str(date)
     serverName = site['url']
     filename = os.path.join(indir, serverName + ".json.gz")
     thisResult = { 'name': site['name'] }
@@ -108,24 +107,28 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     # Configuration
-    config = ConfigParser.SafeConfigParser({'timezone': 'utc', 'wayback': 60})
+    config = ConfigParser.SafeConfigParser({'timezone': 'utc',
+                                            'wayback': 60,
+                                            'datadir': 'data'})
     config.read(args.config)
+    DATADIR = config.get('Common', 'datadir')
 
     today = datetime.now(pytz.timezone(config.get('Common', 'timezone'))).date()
-    indir = str(today)
+    indir = os.path.join(DATADIR, str(today));
     output = {"update": str(today)};
     results = []
     grades = {}
     sites = loadServerList(httpsOnly=False)
     for idx, s in enumerate(sites):
-        thisResult = parsedate(s, today)
+        thisResult = parsedate(s, indir)
         results += [thisResult]
         grades[idx] = [thisResult['lowGrade']]
     wayback = config.getint('Analyze', 'wayback');
     for w in range(1, wayback):
         oldday = today - timedelta(days = w)
+        indir = os.path.join(DATADIR, str(oldday));
         for idx, s in enumerate(sites):
-            oldResult = parsedate(s, oldday)
+            oldResult = parsedate(s, indir)
             grades[idx].insert(0, oldResult['lowGrade'])
 
     for idx, s in enumerate(sites):

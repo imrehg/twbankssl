@@ -19,10 +19,11 @@ parser.add_argument('-q', '--quiet', help='Run quiet', action='store_true', defa
 args = parser.parse_args()
 
 # Configuration
-config = ConfigParser.SafeConfigParser({'timezone': 'utc'})
+config = ConfigParser.SafeConfigParser({'timezone': 'utc', 'datadir': 'data'})
 config.read(args.config)
 
 QUIET = args.quiet
+DATADIR = config.get('Common', 'datadir');
 
 # Command line arguments for the ssllabs scan
 # For more info, check `./ssllabs-scan -help`
@@ -30,7 +31,7 @@ sslcmd = [config.get('Scrape', 'ssllabsbin'),  "-quiet=true", "-usecache=true", 
 
 # Set output directory
 today = datetime.now(pytz.timezone(config.get('Common', 'timezone'))).date()
-outdir = str(today)
+outdir = os.path.join(DATADIR, str(today))
 
 def getServerAssessment(serverName=None):
     """ Task to done a single server assessment and save the results
