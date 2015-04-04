@@ -37,9 +37,53 @@ function displayResults(input) {
 	    clowgrade = row.insertCell(-1);
 	cname.innerHTML = '<a href="'+item.link+'">'+item.name+'</a>';
 	cname.className = "orgname";
-	clowgrade.innerHTML = '<span class="lowgrade"><a href="'+SSLTESTURL+'?d='+item.url+'">'+item.lowGrade+'</a></span>';
+	clowgrade.innerHTML = '<span class="lowgrade" id="grade'+i+'"><a href="'+SSLTESTURL+'?d='+item.url+'">'+item.lowGrade+'</a></span><br><span id="sparkline'+i+'">';
 	summary[item.lowGrade[0]]++;
 	clowgrade.className = "lowgrade";
+        var sparkspan = document.createElement("span");
+        // var sparkline = new Sparkline(sparkspan, {width: 100, minValue: 0, maxValue: 9});
+        var sparkline = new Sparkline(document.getElementById('sparkline'+i), {width: 100, minValue: 0, maxValue: 10});
+        var results = [],
+            wayback = item.wayback;
+        for (var j = 0; j < wayback.length; j++) {
+            var grade = wayback[j];
+            switch(grade) {
+            case '?':
+                results.push(0);
+                break;
+            case 'X':
+                results.push(1);
+                break;
+            case 'F':
+                results.push(2);
+                break;
+            case 'E':
+                results.push(3);
+                break;
+            case 'D':
+                results.push(4);
+                break;
+            case 'C':
+                results.push(5);
+                break;
+            case 'B':
+                results.push(6);
+                break;
+            case 'A-':
+                results.push(7);
+                break;
+            case 'A':
+                results.push(8);
+                break;
+            case 'A+':
+                results.push(9);
+                break;
+            default:
+                results.push(0);
+            }
+        }
+        sparkline.draw(results);
+        clowgrade.appendChild(sparkspan);
 	var endpoints = item.endpoints;
 	var endpointcount = endpoints.length;
 	if (endpointcount > 1) {
