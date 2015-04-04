@@ -41,7 +41,7 @@ def parsedate(site, date):
     thisResult = { 'name': site['name'] }
 
     if not os.path.exists(filename):
-        thisResult['lowGrade'] = '?'
+        thisResult['lowGrade'] = 'X'
         thisResult['link'] = site['link']
         thisResult['url'] = serverName
         thisResult['endpoints'] = []

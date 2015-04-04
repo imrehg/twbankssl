@@ -41,16 +41,13 @@ function displayResults(input) {
 	summary[item.lowGrade[0]]++;
 	clowgrade.className = "lowgrade";
         var sparkspan = document.createElement("span");
-        // var sparkline = new Sparkline(sparkspan, {width: 100, minValue: 0, maxValue: 9});
+        // var sparkline = new Sparkline(sparkspan, {width: 100, minValue: 1, maxValue: 9});
         var sparkline = new Sparkline(document.getElementById('sparkline'+i), {width: 100, minValue: 0, maxValue: 10});
         var results = [],
             wayback = item.wayback;
         for (var j = 0; j < wayback.length; j++) {
             var grade = wayback[j];
             switch(grade) {
-            case '?':
-                results.push(0);
-                break;
             case 'X':
                 results.push(1);
                 break;
