@@ -37,7 +37,7 @@ function displayResults(input) {
 	    clowgrade = row.insertCell(-1);
 	cname.innerHTML = '<a href="'+item.link+'">'+item.name+'</a>';
 	cname.className = "orgname";
-	clowgrade.innerHTML = '<span class="lowgrade" id="grade'+i+'"><a href="'+SSLTESTURL+'?d='+item.url+'">'+item.lowGrade+'</a></span><br><span id="sparkline'+i+'">';
+	clowgrade.innerHTML = '<span class="lowgrade" id="grade'+i+'"><a href="'+SSLTESTURL+'?d='+item.url+'">'+item.lowGrade+'</a></span><br><span id="sparkline'+i+'" class="sparkline">';
 	summary[item.lowGrade[0]]++;
 	clowgrade.className = "lowgrade";
         var sparkspan = document.createElement("span");

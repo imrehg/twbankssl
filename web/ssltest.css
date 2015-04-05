@@ -19,3 +19,7 @@ td.lowgrade {
 td.grade {
     text-align: center;
 }
+
+span.sparkline {
+    background-color: #EEE;
+}
