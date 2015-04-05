@@ -4,12 +4,13 @@ Generates JSON output from the SSL Labs test data scrape
 
 Run it something like this: `./generatesummary.py > ssltest.json`
 """
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, time
 import csv
 import gzip
 import os
 import simplejson as json
 from urlparse import urlparse
+from feedgen.feed import FeedGenerator
 
 def loadServerList(inputFile='servers.csv', httpsOnly=True):
     """ Load list of servers to check from configuration.
@@ -110,16 +111,34 @@ if __name__ == '__main__':
     # Command line arguments
     parser = argparse.ArgumentParser(description='Batch SSL grade query.')
     parser.add_argument('-c', '--config', help='Congfiguration file for %(prog)s', default='script.conf')
+    parser.add_argument('-r', '--rss', help='Generate rss feed and write it to a file at RSS', default='')
     args = parser.parse_args()
 
     # Configuration
     config = ConfigParser.SafeConfigParser({'timezone': 'utc',
                                             'wayback': 60,
-                                            'datadir': 'data'})
+                                            'datadir': 'data',
+                                            'rsstitle': 'SSL test',
+                                            'rssdescription': 'SSL test',
+                                            'rsslink': '',
+                                        })
     config.read(args.config)
     DATADIR = config.get('Common', 'datadir')
+    RSS = len(args.rss) > 0
+    TZ = config.get('Common', 'timezone')
 
-    today = datetime.now(pytz.timezone(config.get('Common', 'timezone'))).date()
+    if RSS:
+        rssfile = args.rss
+        rsstitle = config.get('RSS', 'rsstitle')
+        fg = FeedGenerator()
+        fg.title(rsstitle)
+        fg.description(config.get('RSS', 'rssdescription'))
+        fg.link(href=config.get('RSS', 'rsslink'), rel='self')
+        rssfeed  = fg.rss_str(pretty=True)
+        fg.rss_file(rssfile)
+
+    timezone = pytz.timezone(TZ)
+    today = datetime.now(timezone).date()
     indir = os.path.join(DATADIR, str(today));
     output = {"update": str(today)};
     results = []
@@ -132,12 +151,31 @@ if __name__ == '__main__':
     wayback = config.getint('Analyze', 'wayback');
     for w in range(1, wayback):
         oldday = today - timedelta(days = w)
+        olddayafter = today - timedelta(days = (w - 1))
         indir = os.path.join(DATADIR, str(oldday));
+        changes = []
         for idx, s in enumerate(sites):
             oldResult = parsedate(s, indir)
             grades[idx].insert(0, oldResult['lowGrade'])
+            if grades[idx][0] != grades[idx][1]:
+                changes += [{'index': idx, 'oldgrade': grades[idx][0], 'newgrade': grades[idx][1]}]
+        if RSS and len(changes) > 0:
+            fe = fg.add_entry()
+            fe.title('Changes on %s' %(olddayafter))
+            content = ''
+            for c in changes:
+                item = results[c['index']]
+                org = results[c['index']]['name']
+                content += '<a href="%s">%s</a> went from grade %s to %s.<br>' %(item['url'], item['name'], c['oldgrade'], c['newgrade'])
+            fe.content(content = content)
+            pubDate = timezone.localize(datetime.combine(olddayafter, datetime.min.time()))
+            fe.pubdate(pubDate = pubDate)
 
     for idx, s in enumerate(sites):
         results[idx]['wayback'] = grades[idx]
     output['results'] = results
     print json.dumps(output)
+
+    if RSS:
+        rssfeed  = fg.rss_str(pretty=True)
+        fg.rss_file(rssfile)
