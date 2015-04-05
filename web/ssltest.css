@@ -10,6 +10,7 @@ table {
 
 th {
     font-size: large;
+    vertical-align: bottom;
 }
 
 table, th, td {
