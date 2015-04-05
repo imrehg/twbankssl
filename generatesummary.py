@@ -76,6 +76,11 @@ def parsedate(site, indir):
             poodle = None
 
         try:
+            forwardSecrecy = e['details']['forwardSecrecy'] >= 2   # bit 1 is set, modern browsers
+        except:
+            forwardSecrecy = False
+
+        try:
             beast = e['details']['vulnBeast']
         except KeyError:
             beast = None
@@ -87,6 +92,7 @@ def parsedate(site, indir):
                   'rc4': rc4,
                   'poodle': poodle,
                   'beast': beast,
+                  'forwardSecrecy': forwardSecrecy,
               }]
         if ('grade' not in thisResult) or (grade < thisResult['lowGrade']):
             if grade != 'X':

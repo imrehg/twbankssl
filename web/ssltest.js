@@ -99,6 +99,8 @@ function displayResults(input) {
 	    cpoodle.innerHTML = "N/A"
 	    var cbeast = thisRow.insertCell(-1);
 	    cbeast.innerHTML = "N/A"
+	    var cforward = thisRow.insertCell(-1);
+	    cforward.innerHTML = "N/A"
 	    var cwarnings = thisRow.insertCell(-1);
 	    cwarnings.innerHTML = "N/A"
 	    var cstatus = thisRow.insertCell(-1);
@@ -140,6 +142,15 @@ function displayResults(input) {
                 cbeast.className = "good";
             }
 
+	    var cforward = thisRow.insertCell(-1);
+            if (endpoint.forwardSecrecy) {
+                cforward.innerHTML = "Good";
+                cforward.className = "good";
+            } else {
+                cforward.innerHTML = "Nope";
+                cforward.className = "bad";
+            }
+
 	    var cwarnings = thisRow.insertCell(-1);
             if (endpoint.hasWarnings) {
                 cwarnings.innerHTML = "Has";
@@ -158,6 +169,8 @@ function displayResults(input) {
                 cpoodle.className = "";
 		cbeast.innerHTML = 'N/A';
                 cbeast.className = "";
+		cforward.innerHTML = 'N/A';
+                cforward.className = "";
 		cwarnings.innerHTML = 'N/A';
                 cwarnings.className = "";
 	    }
