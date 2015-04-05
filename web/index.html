@@ -1,29 +1,48 @@
 <html>
   <head>
     <title>Taiwan Financial Institute SSL Status</title>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="ssltest.css">
     <link rel="icon" href="favicon.ico" type="image/x-icon" />
   </head>
-<body>
+  <body>
 
-<p>SSL test grades for Taiwanese Financial institutions. Last updated on <span id="lastupdate">???</span>.</p>
+    <header>
+      <h1>Taiwan Bank SSL status</h1>
 
-<p id="summary"></p>
+      <p>Automatic scanning of all Taiwanese bank websites each day, and publishing the results here. Last updated on <span id="lastupdate">???</span>.</p>
 
-<table id="resultsTable">
-<thead>
- <th>Organization Name</th>
- <th>Overall grade</th>
- <th>Endpoint grade</th>
- <th>RC4</th>
- <th>POODLE</th>
- <th>BEAST</th>
- <th>Warnings</th>
- <th>Status</th>
-</thead>
-</table>
+      <p id="summary"></p>
+    </header>
 
-<script src="sparkline.js"></script>
-<script src="ssltest.js"></script>
-</body>
+    <main>
+      <table id="resultsTable" class="center">
+	<thead>
+	  <th>Organization Name</th>
+	  <th>Grade <sup><a href="#grade">#</a></sup></th>
+	  <th>Endpoint grade <sup><a href="#grading">#</a></sup></th>
+	  <th>RC4</th>
+	  <th>POODLE</th>
+	  <th>BEAST</th>
+	  <th>Warnings <sup><a href="#warnings">#</a></sup></th>
+	  <th>Status</th>
+	</thead>
+      </table>
+
+      <div id="spinner" class="spinner"></div>
+
+      <h3>Notes</h3>
+
+      <ul>
+	<li><a name="grade"><strong>Grade</strong>: grade derived from lowest graded endpoint, also shown the 60-day evolution of the grade</li>
+	<li><a name="grading"><strong>Endpoint grade</strong>: grade received by SSL Test (from F to A+), or X if it couldn't be graded for any reason.</li>
+	<li><a name="warnings"><strong>Warnings</strong>: does the site has any warnings that affect its rating?</li>
+      </ul>
+    </main>
+
+    <footer>Source for the SSL scanner script and this page is <a href="https://github.com/imrehg/twbankssl">on GitHub</a>, released under permissive open source license. Patches / Pull Requests are welcome. Written in Python + Javascript. <a href="https://www.ssllabs.com/ssltest/">SSL Test</a> is by <a href="https://twitter.com/qualys">Qualis</a>, their service is much appreciated!.<footer>
+
+    <script src="sparkline.js"></script>
+    <script src="ssltest.js"></script>
+  </body>
 <html>

@@ -111,21 +111,55 @@ function displayResults(input) {
 	    var cscore = thisRow.insertCell(-1);
 	    cscore.innerHTML = '<a href="'+SSLTESTURL+'?d='+item.url+'&s='+endpoint.ipAddress+'">'+endpoint.grade+'</a>'
 	    cscore.className = "grade";
+
 	    var crc4 = thisRow.insertCell(-1);
-	    crc4.innerHTML = endpoint.rc4 ? "Bad" : "Good";
+            console.log(endpoint.rc4);
+            if (endpoint.rc4) {
+                crc4.innerHTML = "Bad";
+                crc4.className = "bad";
+            } else {
+                crc4.innerHTML = "Good";
+                crc4.className = "good";
+            }
+
 	    var cpoodle = thisRow.insertCell(-1);
-	    cpoodle.innerHTML = endpoint.poodle ? "Bad" : "Good";
+            if (endpoint.poodle) {
+                cpoodle.innerHTML = "Bad";
+                cpoodle.className = "bad";
+            } else {
+                cpoodle.innerHTML = "Good";
+                cpoodle.className = "good";
+            }
+
 	    var cbeast = thisRow.insertCell(-1);
-	    cbeast.innerHTML = endpoint.beast ? "Bad" : "Good";
+            if (endpoint.beast) {
+                cbeast.innerHTML = "Bad";
+                cbeast.className = "bad";
+            } else {
+                cbeast.innerHTML = "Good";
+                cbeast.className = "good";
+            }
+
 	    var cwarnings = thisRow.insertCell(-1);
-	    cwarnings.innerHTML = endpoint.hasWarnings ? "Has" : "Good";
+            if (endpoint.hasWarnings) {
+                cwarnings.innerHTML = "Has";
+                cwarnings.className = "bad";
+            } else {
+                cwarnings.innerHTML = "Good";
+                cwarnings.className = "good";
+            }
+
 	    var cstatus = thisRow.insertCell(-1);
 	    cstatus.innerHTML = (endpoint.statusMessage == 'Ready') ? "" : endpoint.statusMessage;
 	    if (endpoint.grade == 'X') {
 		crc4.innerHTML = 'N/A';
+                crc4.className = "";
 		cpoodle.innerHTML = 'N/A';
+                cpoodle.className = "";
 		cbeast.innerHTML = 'N/A';
+                cbeast.className = "";
 		cwarnings.innerHTML = 'N/A';
+                cwarnings.className = "";
 	    }
 	}
     }
@@ -142,6 +176,8 @@ function displayResults(input) {
     console.log(sumText);
     var summary = document.getElementById("summary");
     summary.innerHTML = "Distribution of grades: " + sumText;
+
+    document.getElementById("spinner").className = "hide";
 }
 
 loadJSON('ssltest.json',
