@@ -115,7 +115,6 @@ function displayResults(input) {
 	    cscore.className = "grade";
 
 	    var crc4 = thisRow.insertCell(-1);
-            console.log(endpoint.rc4);
             if (endpoint.rc4) {
                 crc4.innerHTML = "Bad";
                 crc4.className = "bad";
