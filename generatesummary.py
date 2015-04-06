@@ -4,6 +4,7 @@ Generates JSON output from the SSL Labs test data scrape
 
 Run it something like this: `./generatesummary.py > ssltest.json`
 """
+from __future__ import division
 from datetime import datetime, timedelta, time
 import csv
 import gzip
@@ -103,25 +104,38 @@ def parsedate(site, indir):
     thisResult['endpoints'] = ends
     return thisResult
 
+def gradesummary(grades):
+    gradedist = {'A': 0, 'B': 0, 'C': 0, 'D': 0, 'E': 0, 'F': 0, 'X': 0}
+    total = len(grades)
+    for i in grades:
+        gradedist[grades[i][0][0]] += 1
+    textsummary = ''
+    for idx, g in enumerate(['A', 'B', 'C', 'D', 'E', 'F', 'X']):
+        if gradedist[g] > 0:
+            textsummary += '{}: {} ({:.0%}); '.format(g, gradedist[g], gradedist[g] / total)
+    return textsummary
+
 if __name__ == '__main__':
     import argparse
     import ConfigParser
     import pytz
+    from twython import Twython
 
     # Command line arguments
     parser = argparse.ArgumentParser(description='Batch SSL grade query.')
     parser.add_argument('-c', '--config', help='Congfiguration file for %(prog)s', default='script.conf')
     parser.add_argument('-r', '--rss', help='Generate rss feed and write it to a file at RSS', default='')
+    parser.add_argument('-t', '--tweet', help='Send out tweets', action='store_true')
     args = parser.parse_args()
 
     # Configuration
     config = ConfigParser.SafeConfigParser({'timezone': 'utc',
                                             'wayback': 60,
                                             'datadir': 'data',
+                                            'site': '',
                                             'rsstitle': 'SSL test',
                                             'rssdescription': 'SSL test',
                                             'rsslink': '',
-                                            'rsshost': '',
                                             'rssauthorname': '',
                                             'rssauthoremail': '',
                                         })
@@ -129,6 +143,8 @@ if __name__ == '__main__':
     DATADIR = config.get('Common', 'datadir')
     RSS = len(args.rss) > 0
     TZ = config.get('Common', 'timezone')
+    TWEET = args.tweet
+    SITE = config.get('Common', 'site')
 
     if RSS:
         rssfile = args.rss
@@ -138,7 +154,6 @@ if __name__ == '__main__':
         fg.description(config.get('RSS', 'rssdescription'))
         rsslink = config.get('RSS', 'rsslink')
         fg.link(href=rsslink, rel='self')
-        rsshost = config.get('RSS', 'rsshost')
         rssfeed  = fg.rss_str(pretty=True)
         fg.rss_file(rssfile)
         fg.copyright(copyright="CC-BY 4.0")
@@ -146,6 +161,13 @@ if __name__ == '__main__':
                      'email': config.get('RSS', 'rssauthoremail'),
                  }
         fg.author(author=rssauthor, replace=True)
+    if TWEET:
+        APP_KEY = config.get('Twitter', 'appkey')
+        APP_SECRET = config.get('Twitter', 'appsecret')
+        OAUTH_TOKEN = config.get('Twitter', 'token')
+        OAUTH_TOKEN_SECRET = config.get('Twitter', 'tokensecret')
+        twitter = Twython(APP_KEY, APP_SECRET,
+                  OAUTH_TOKEN, OAUTH_TOKEN_SECRET)
 
     timezone = pytz.timezone(TZ)
     today = datetime.now(timezone).date()
@@ -158,6 +180,12 @@ if __name__ == '__main__':
         thisResult = parsedate(s, indir)
         results += [thisResult]
         grades[idx] = [thisResult['lowGrade']]
+    if TWEET:
+        tweettext = 'Taiwan Bank SSL Summary on {} -> '.format(today)
+        tweettext += gradesummary(grades)
+        tweettext += SITE
+        twitter.update_status(status=tweettext)
+
     wayback = config.getint('Analyze', 'wayback');
     for w in range(1, wayback):
         oldday = today - timedelta(days = w)
@@ -177,13 +205,19 @@ if __name__ == '__main__':
                 item = results[c['index']]
                 org = results[c['index']]['name']
                 content += '<a href="%s">%s</a> went from grade %s to %s.<br>' %(sites[c['index']]['link'], item['name'], c['oldgrade'], c['newgrade'])
-            content += '<br>See all test details on the <a href="%s">summary page</a>.' % (rsshost)
+            content += '<br>See all test details on the <a href="%s">summary page</a>.' % (SITE)
             fe.content(content = content)
             pubDate = timezone.localize(datetime.combine(olddayafter, datetime.min.time()))
             fe.pubdate(pubDate = pubDate)
             fe.guid(guid="%s#%s" % (rsslink, olddayafter))
             fe.author(author=rssauthor, replace=True)
-
+        if w == 1 and TWEET:
+            tweets = []
+            for c in changes:
+                item = results[c['index']]
+                tweets += ['{} went from grade {} to {} on {} {}'.format(item['name'], c['oldgrade'], c['newgrade'], olddayafter, sites[c['index']]['link'])]
+            for tw in tweets:
+                twitter.update_status(status=tw)
     for idx, s in enumerate(sites):
         results[idx]['wayback'] = grades[idx]
     output['results'] = results
