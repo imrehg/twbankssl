@@ -121,6 +121,9 @@ if __name__ == '__main__':
                                             'rsstitle': 'SSL test',
                                             'rssdescription': 'SSL test',
                                             'rsslink': '',
+                                            'rsshost': '',
+                                            'rssauthorname': '',
+                                            'rssauthoremail': '',
                                         })
     config.read(args.config)
     DATADIR = config.get('Common', 'datadir')
@@ -133,9 +136,16 @@ if __name__ == '__main__':
         fg = FeedGenerator()
         fg.title(rsstitle)
         fg.description(config.get('RSS', 'rssdescription'))
-        fg.link(href=config.get('RSS', 'rsslink'), rel='self')
+        rsslink = config.get('RSS', 'rsslink')
+        fg.link(href=rsslink, rel='self')
+        rsshost = config.get('RSS', 'rsshost')
         rssfeed  = fg.rss_str(pretty=True)
         fg.rss_file(rssfile)
+        fg.copyright(copyright="CC-BY 4.0")
+        rssauthor = {'name': config.get('RSS', 'rssauthorname'),
+                     'email': config.get('RSS', 'rssauthoremail'),
+                 }
+        fg.author(author=rssauthor, replace=True)
 
     timezone = pytz.timezone(TZ)
     today = datetime.now(timezone).date()
@@ -167,9 +177,12 @@ if __name__ == '__main__':
                 item = results[c['index']]
                 org = results[c['index']]['name']
                 content += '<a href="%s">%s</a> went from grade %s to %s.<br>' %(sites[c['index']]['link'], item['name'], c['oldgrade'], c['newgrade'])
+            content += '<br>See all test details on the <a href="%s">summary page</a>.' % (rsshost)
             fe.content(content = content)
             pubDate = timezone.localize(datetime.combine(olddayafter, datetime.min.time()))
             fe.pubdate(pubDate = pubDate)
+            fe.guid(guid="%s#%s" % (rsslink, olddayafter))
+            fe.author(author=rssauthor, replace=True)
 
     for idx, s in enumerate(sites):
         results[idx]['wayback'] = grades[idx]
