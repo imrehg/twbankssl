@@ -166,7 +166,7 @@ if __name__ == '__main__':
             for c in changes:
                 item = results[c['index']]
                 org = results[c['index']]['name']
-                content += '<a href="%s">%s</a> went from grade %s to %s.<br>' %(item['url'], item['name'], c['oldgrade'], c['newgrade'])
+                content += '<a href="%s">%s</a> went from grade %s to %s.<br>' %(sites[c['index']]['link'], item['name'], c['oldgrade'], c['newgrade'])
             fe.content(content = content)
             pubDate = timezone.localize(datetime.combine(olddayafter, datetime.min.time()))
             fe.pubdate(pubDate = pubDate)
