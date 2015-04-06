@@ -1,23 +1,25 @@
 <html>
   <head>
     <title>Taiwan Financial Institute SSL Status</title>
-    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="ssltest.css">
     <link rel="icon" href="favicon.ico" type="image/x-icon" />
+    <link rel="alternate" type="application/rss+xml" href="twbankssl.xml" title="Taiwan Bank SSL Test Changes Feed">
   </head>
   <body>
 
     <header>
       <h1>Taiwan Bank SSL status</h1>
 
-      <p>Automatic scanning of all Taiwanese bank websites each day, and publishing the results here. Last updated on <span id="lastupdate">???</span>.</p>
-
-      <p id="summary"></p>
+      <p>Automatic scanning of all Taiwanese bank websites each day, and publishing the results here. Last updated on <span id="lastupdate">???</span>. There's also an <a href="twbankssl.xml"><i class="fa fa-rss"></i> RSS feed of changes</a>.</p>
 
       <p><strong>Disclaimer</strong>: no guarantees provided that the information on this page is correct, neither are all issues highlighted. To see the complete scan data click the grade value.</p>
     </header>
 
     <main>
+      <p id="summary"></p>
+
       <table id="resultsTable" class="center">
 	<thead>
 	  <th>Organization Name</th>
