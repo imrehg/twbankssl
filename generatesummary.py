@@ -214,6 +214,8 @@ if __name__ == '__main__':
         if w == 1 and TWEET:
             tweets = []
             for c in changes:
+                if c['oldgrade'] == 'X' or c['newgrade'] == 'X':
+                    continue
                 item = results[c['index']]
                 tweets += ['{} went from grade {} to {} on {} {}'.format(item['name'], c['oldgrade'], c['newgrade'], olddayafter, sites[c['index']]['link'])]
             for tw in tweets:
