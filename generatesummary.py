@@ -184,7 +184,7 @@ if __name__ == '__main__':
         tweettext = 'Taiwan Bank SSL Summary on {} -> '.format(today)
         tweettext += gradesummary(grades)
         tweettext += SITE
-        twitter.update_status(status=tweettext)
+        tweets = ['tweettext']
 
     wayback = config.getint('Analyze', 'wayback');
     for w in range(1, wayback):
@@ -212,14 +212,11 @@ if __name__ == '__main__':
             fe.guid(guid="%s#%s" % (rsslink, olddayafter))
             fe.author(author=rssauthor, replace=True)
         if w == 1 and TWEET:
-            tweets = []
             for c in changes:
                 if c['oldgrade'] == 'X' or c['newgrade'] == 'X':
                     continue
                 item = results[c['index']]
                 tweets += ['{} went from grade {} to {} on {} {}'.format(item['name'], c['oldgrade'], c['newgrade'], olddayafter, sites[c['index']]['link'])]
-            for tw in tweets:
-                twitter.update_status(status=tw)
     for idx, s in enumerate(sites):
         results[idx]['wayback'] = grades[idx]
     output['results'] = results
@@ -228,3 +225,6 @@ if __name__ == '__main__':
     if RSS:
         rssfeed  = fg.rss_str(pretty=True)
         fg.rss_file(rssfile)
+    if TWEET:
+        for tw in tweets:
+            twitter.update_status(status=tw)
