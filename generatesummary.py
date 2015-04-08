@@ -184,7 +184,7 @@ if __name__ == '__main__':
         tweettext = 'Taiwan Bank SSL Summary on {} -> '.format(today)
         tweettext += gradesummary(grades)
         tweettext += SITE
-        tweets = ['tweettext']
+        tweets = [tweettext]
 
     wayback = config.getint('Analyze', 'wayback');
     for w in range(1, wayback):
