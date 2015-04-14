@@ -103,6 +103,8 @@ function displayResults(input) {
 	    cforward.innerHTML = "N/A"
 	    var cwarnings = thisRow.insertCell(-1);
 	    cwarnings.innerHTML = "N/A"
+	    var cserver = thisRow.insertCell(-1);
+	    cserver.innerHTML = "N/A"
 	    var cstatus = thisRow.insertCell(-1);
 	    cstatus.innerHTML = "No SSL support!"
 	}
@@ -159,6 +161,13 @@ function displayResults(input) {
                 cwarnings.className = "good";
             }
 
+	    var cserver = thisRow.insertCell(-1);
+            if (endpoint.serverSignature) {
+                cserver.innerHTML = endpoint.serverSignature;
+            } else {
+                cserver.innerHTML = 'N/A';
+            }
+
 	    var cstatus = thisRow.insertCell(-1);
 	    cstatus.innerHTML = (endpoint.statusMessage == 'Ready') ? "" : endpoint.statusMessage;
 	    if (endpoint.grade == 'X') {
@@ -172,6 +181,7 @@ function displayResults(input) {
                 cforward.className = "";
 		cwarnings.innerHTML = 'N/A';
                 cwarnings.className = "";
+                cserver.innerHTML = 'N/A';
 	    }
 	}
     }
