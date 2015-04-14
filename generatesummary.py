@@ -87,6 +87,11 @@ def parsedate(site, indir):
         except KeyError:
             beast = None
 
+        try:
+            heartbleed = e['details']['heartbleed']
+        except:
+            heartbleed = None
+
         ends += [{'grade': grade,
                   'ipAddress': e['ipAddress'],
                   'hasWarnings': warnings,
@@ -95,6 +100,7 @@ def parsedate(site, indir):
                   'poodle': poodle,
                   'beast': beast,
                   'forwardSecrecy': forwardSecrecy,
+                  'heartbleed': heartbleed,
               }]
         if ('grade' not in thisResult) or (grade < thisResult['lowGrade']):
             if grade != 'X':

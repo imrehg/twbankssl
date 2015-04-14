@@ -99,6 +99,8 @@ function displayResults(input) {
 	    cpoodle.innerHTML = "N/A"
 	    var cbeast = thisRow.insertCell(-1);
 	    cbeast.innerHTML = "N/A"
+	    var chbleed = thisRow.insertCell(-1);
+	    chbleed.innerHTML = "N/A"
 	    var cforward = thisRow.insertCell(-1);
 	    cforward.innerHTML = "N/A"
 	    var cwarnings = thisRow.insertCell(-1);
@@ -141,6 +143,16 @@ function displayResults(input) {
                 cbeast.className = "good";
             }
 
+	    var chbleed = thisRow.insertCell(-1);
+	    console.log(endpoint.heartbleed);
+            if (endpoint.heartbleed) {
+                chbleed.innerHTML = "Bad";
+                chbleed.className = "bad";
+            } else {
+                chbleed.innerHTML = "Good";
+                chbleed.className = "good";
+            }
+
 	    var cforward = thisRow.insertCell(-1);
             if (endpoint.forwardSecrecy) {
                 cforward.innerHTML = "Good";
@@ -168,6 +180,8 @@ function displayResults(input) {
                 cpoodle.className = "";
 		cbeast.innerHTML = 'N/A';
                 cbeast.className = "";
+		chbleed.innerHTML = 'N/A';
+                chbleed.className = "";
 		cforward.innerHTML = 'N/A';
                 cforward.className = "";
 		cwarnings.innerHTML = 'N/A';
