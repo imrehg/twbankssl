@@ -46,7 +46,7 @@
 	<li><a name="grade"><strong>Grade</strong>: grade derived from lowest graded endpoint, also shown the 60-day evolution of the grade</li>
 	<li><a name="endpoint"><strong>Endpoint grade</strong>: grade received by SSL Test (from F to A+) for each detectred endpoint, or X if it couldn't be graded for any reason.</li>
 	<li><a name="rc4"><strong>RC4 support</strong>: using RC4 is <a href="https://tools.ietf.org/html/rfc7465">now prohibited by the IETF</a>; using it <a href="https://news.ycombinator.com/item?id=9198493">seems to be</a> an automatic PCI compliance failure, and there exists a <a href="http://www.isg.rhul.ac.uk/tls/RC4mustdie.html">password recovery attack</a> againts it.</li>
-	<li><a name="poodle"><strong>POODLE</strong>: indicates whether the server is vulnerable to the TLS version of the <a href="http://en.wikipedia.org/wiki/POODLE">POODLE</a> attack. If it says "good", the server can still be vulnerable to the SSL 3.0 version but it's harder to figure out from the SSL Labs reply. As a rule of thumb, grades equal and above B suggest the endpoint is not vulnerable.</li>
+	<li><a name="poodle"><strong>POODLE</strong>: indicates whether the server is vulnerable to the <a href="http://en.wikipedia.org/wiki/POODLE">POODLE</a> attack.</li>
 	<li><a name="fs"><strong>Forward Secrecy</strong>: indicates whether there's forward secrecy available, at least with modern browsers.</li>
 	<li><a name="warnings"><strong>Warnings</strong>: does the site has any warnings that affect its rating?</li>
       </ul>

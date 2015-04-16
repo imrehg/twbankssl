@@ -73,7 +73,7 @@ def parsedate(site, indir):
             rc4 = None
 
         try:
-            poodle = e['details']['poodleTls'] > 1
+            poodle = e['details']['poodle']
         except KeyError:
             poodle = None
 
