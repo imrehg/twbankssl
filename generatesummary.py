@@ -83,9 +83,9 @@ def parsedate(site, indir):
             forwardSecrecy = False
 
         try:
-            beast = e['details']['vulnBeast']
+            freak = e['details']['freak']
         except KeyError:
-            beast = None
+            freak = None
 
         ends += [{'grade': grade,
                   'ipAddress': e['ipAddress'],
@@ -93,7 +93,7 @@ def parsedate(site, indir):
                   'statusMessage': e['statusMessage'],
                   'rc4': rc4,
                   'poodle': poodle,
-                  'beast': beast,
+                  'freak': freak,
                   'forwardSecrecy': forwardSecrecy,
               }]
         if ('grade' not in thisResult) or (grade < thisResult['lowGrade']):

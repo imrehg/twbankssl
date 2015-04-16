@@ -97,8 +97,8 @@ function displayResults(input) {
 	    crc4.innerHTML = "N/A"
 	    var cpoodle = thisRow.insertCell(-1);
 	    cpoodle.innerHTML = "N/A"
-	    var cbeast = thisRow.insertCell(-1);
-	    cbeast.innerHTML = "N/A"
+	    var cfreak = thisRow.insertCell(-1);
+	    cfreak.innerHTML = "N/A"
 	    var cforward = thisRow.insertCell(-1);
 	    cforward.innerHTML = "N/A"
 	    var cwarnings = thisRow.insertCell(-1);
@@ -132,13 +132,13 @@ function displayResults(input) {
                 cpoodle.className = "good";
             }
 
-	    var cbeast = thisRow.insertCell(-1);
-            if (endpoint.beast) {
-                cbeast.innerHTML = "Bad";
-                cbeast.className = "bad";
+	    var cfreak = thisRow.insertCell(-1);
+            if (endpoint.freak) {
+                cfreak.innerHTML = "Bad";
+                cfreak.className = "bad";
             } else {
-                cbeast.innerHTML = "Good";
-                cbeast.className = "good";
+                cfreak.innerHTML = "Good";
+                cfreak.className = "good";
             }
 
 	    var cforward = thisRow.insertCell(-1);
@@ -166,8 +166,8 @@ function displayResults(input) {
                 crc4.className = "";
 		cpoodle.innerHTML = 'N/A';
                 cpoodle.className = "";
-		cbeast.innerHTML = 'N/A';
-                cbeast.className = "";
+		cfreak.innerHTML = 'N/A';
+                cfreak.className = "";
 		cforward.innerHTML = 'N/A';
                 cforward.className = "";
 		cwarnings.innerHTML = 'N/A';
