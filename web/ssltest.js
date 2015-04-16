@@ -155,7 +155,7 @@ function displayResults(input) {
                 cwarnings.innerHTML = "Has";
                 cwarnings.className = "bad";
             } else {
-                cwarnings.innerHTML = "Good";
+                cwarnings.innerHTML = "None";
                 cwarnings.className = "good";
             }
 
