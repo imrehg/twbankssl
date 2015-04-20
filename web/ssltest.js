@@ -93,6 +93,8 @@ function displayResults(input) {
 	    var cscore = thisRow.insertCell(-1);
 	    cscore.innerHTML = 'N/A'
 	    cscore.className = "grade";
+	    var cev = thisRow.insertCell(-1);
+	    cev.innerHTML = "N/A"
 	    var crc4 = thisRow.insertCell(-1);
 	    crc4.innerHTML = "N/A"
 	    var cpoodle = thisRow.insertCell(-1);
@@ -113,6 +115,15 @@ function displayResults(input) {
 	    var cscore = thisRow.insertCell(-1);
 	    cscore.innerHTML = '<a href="'+SSLTESTURL+'?d='+item.url+'&s='+endpoint.ipAddress+'">'+endpoint.grade+'</a>'
 	    cscore.className = "grade";
+
+            var cev = thisRow.insertCell(-1);
+            if (endpoint.ev) {
+                cev.innerHTML = "Yes";
+                cev.className = "good";
+            } else {
+                cev.innerHTML = "No";
+                cev.className = "bad";
+            }
 
 	    var crc4 = thisRow.insertCell(-1);
             if (endpoint.rc4) {
@@ -162,6 +173,8 @@ function displayResults(input) {
 	    var cstatus = thisRow.insertCell(-1);
 	    cstatus.innerHTML = (endpoint.statusMessage == 'Ready') ? "" : endpoint.statusMessage;
 	    if (endpoint.grade == 'X') {
+		cev.innerHTML = 'N/A';
+                cev.className = "";
 		crc4.innerHTML = 'N/A';
                 crc4.className = "";
 		cpoodle.innerHTML = 'N/A';

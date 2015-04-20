@@ -87,6 +87,11 @@ def parsedate(site, indir):
         except KeyError:
             freak = None
 
+        try:
+            ev = e['details']['cert']['validationType'] == 'E'
+        except KeyError:
+            ev = False
+
         ends += [{'grade': grade,
                   'ipAddress': e['ipAddress'],
                   'hasWarnings': warnings,
@@ -95,6 +100,7 @@ def parsedate(site, indir):
                   'poodle': poodle,
                   'freak': freak,
                   'forwardSecrecy': forwardSecrecy,
+                  'ev': ev,
               }]
         if ('grade' not in thisResult) or (grade < thisResult['lowGrade']):
             if grade != 'X':
