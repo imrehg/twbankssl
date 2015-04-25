@@ -27,7 +27,12 @@ DATADIR = config.get('Common', 'datadir');
 
 # Command line arguments for the ssllabs scan
 # For more info, check `./ssllabs-scan -help`
-sslcmd = [config.get('Scrape', 'ssllabsbin'),  "-quiet=true", "-usecache=true", "-maxage=2"]
+sslcmd = [config.get('Scrape', 'ssllabsbin'),
+          "-quiet=true",
+          "-usecache=true",
+          "-maxage=2",
+          "-api=https://api.ssllabs.com/api/v2/",
+         ]
 
 # Set output directory
 today = datetime.now(pytz.timezone(config.get('Common', 'timezone'))).date()
