@@ -10,6 +10,7 @@ import pytz
 import simplejson as json
 import subprocess
 import sys
+from time import sleep
 from urlparse import urlparse
 
 # Command line arguments
@@ -47,6 +48,8 @@ def getServerAssessment(serverName=None):
     if serverName is None:
         return
 
+    if not QUIET:
+        print("Doing %s" %(serverName))
     thiscmd = sslcmd + [serverName]
     results = None
 
@@ -61,12 +64,17 @@ def getServerAssessment(serverName=None):
 
     if results:
         resultsjson = json.loads(results)
-        if resultsjson[0]['status'] != 'READY':
-            return
-        filename = os.path.join(outdir, serverName + ".json.gz")
-        f = gzip.open(filename, 'wb')
-        f.write(json.dumps(resultsjson))
-        f.close()
+        if len(resultsjson) > 0 and resultsjson[0]['status'] == 'READY':
+            filename = os.path.join(outdir, serverName + ".json.gz")
+            f = gzip.open(filename, 'wb')
+            f.write(json.dumps(resultsjson))
+            f.close()
+        else:
+            if not QUIET:
+                reason = "Not enough data" if len(resultsjson) == 0 else "Not READY"
+                print("Sleep and retry %s in 3mins: %s" %(serverName, reason))
+            sleep(3*60)
+            getServerAssessment(serverName)
     if not QUIET:
         print("Done: "+serverName)
 
