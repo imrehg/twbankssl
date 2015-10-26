@@ -98,6 +98,6 @@ if __name__ == '__main__':
 
     # Run the assessment in parallel
     p = Pool(8)
-    p.map(getServerAssessment, servers)
+    p.map_async(getServerAssessment, servers).get(9999999)
     p.close()
     p.join()
