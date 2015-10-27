@@ -111,12 +111,12 @@ def parsedate(site, indir):
     return thisResult
 
 def gradesummary(grades):
-    gradedist = {'A': 0, 'B': 0, 'C': 0, 'D': 0, 'E': 0, 'F': 0, 'X': 0}
+    gradedist = {'A': 0, 'B': 0, 'C': 0, 'D': 0, 'E': 0, 'F': 0, 'X': 0, 'T': 0}
     total = len(grades)
     for i in grades:
         gradedist[grades[i][0][0]] += 1
     textsummary = ''
-    for idx, g in enumerate(['A', 'B', 'C', 'D', 'E', 'F', 'X']):
+    for idx, g in enumerate(['A', 'B', 'C', 'D', 'E', 'F', 'X', 'T']):
         if gradedist[g] > 0:
             textsummary += '{}: {} ({:.0%}); '.format(g, gradedist[g], gradedist[g] / total)
     return textsummary
