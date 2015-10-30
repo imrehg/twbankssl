@@ -28,7 +28,7 @@ function displayResults(input) {
     var SSLTESTURL = "https://www.ssllabs.com/ssltest/analyze.html";
     var table = document.getElementById("resultsTable");
     data = input.results;
-    var summary = {"A": 0, "B": 0, "C": 0, "D": 0, "E": 0, "F": 0, "X": 0 };
+    var summary = {"A": 0, "B": 0, "C": 0, "D": 0, "E": 0, "F": 0, "T":0, "M":0, "X": 0 };
     var totalOrgs = data.length;
     for (var i = 0; i < totalOrgs; i++) {
 	item = data[i]
@@ -42,7 +42,7 @@ function displayResults(input) {
 	clowgrade.className = "lowgrade";
         var sparkspan = document.createElement("span");
         // var sparkline = new Sparkline(sparkspan, {width: 100, minValue: 1, maxValue: 9});
-        var sparkline = new Sparkline(document.getElementById('sparkline'+i), {width: 100, minValue: 0, maxValue: 10});
+        var sparkline = new Sparkline(document.getElementById('sparkline'+i), {width: 100, minValue: 0, maxValue: 12});
         var results = [],
             wayback = item.wayback;
         for (var j = 0; j < wayback.length; j++) {
@@ -51,29 +51,35 @@ function displayResults(input) {
             case 'X':
                 results.push(1);
                 break;
-            case 'F':
+            case 'M':
                 results.push(2);
                 break;
-            case 'E':
+            case 'T':
                 results.push(3);
                 break;
-            case 'D':
+            case 'F':
                 results.push(4);
                 break;
-            case 'C':
+            case 'E':
                 results.push(5);
                 break;
-            case 'B':
+            case 'D':
                 results.push(6);
                 break;
-            case 'A-':
+            case 'C':
                 results.push(7);
                 break;
-            case 'A':
+            case 'B':
                 results.push(8);
                 break;
-            case 'A+':
+            case 'A-':
                 results.push(9);
+                break;
+            case 'A':
+                results.push(10);
+                break;
+            case 'A+':
+                results.push(11);
                 break;
             default:
                 results.push(0);
