@@ -196,7 +196,7 @@ function displayResults(input) {
     }
     var lastUpdate = document.getElementById("lastupdate");
     lastupdate.innerHTML = input.update;
-    var grades = ["A", "B", "C", "D", "E", "F", "X"];
+    var grades = ["A", "B", "C", "D", "E", "F", "T", "M", "X"];
     var sumText = ""
     for (var i = 0; i < grades.length; i++) {
 	numGrade = summary[grades[i]];
