@@ -118,7 +118,7 @@ def gradesummary(grades):
     textsummary = ''
     for idx, g in enumerate(['A', 'B', 'C', 'D', 'E', 'F', 'T', 'M', 'X']):
         if gradedist[g] > 0:
-            textsummary += '{}: {} ({:.0%}); '.format(g, gradedist[g], gradedist[g] / total)
+            textsummary += '{}:{}({:.0%}); '.format(g, gradedist[g], gradedist[g] / total)
     return textsummary
 
 if __name__ == '__main__':
@@ -187,7 +187,7 @@ if __name__ == '__main__':
         results += [thisResult]
         grades[idx] = [thisResult['lowGrade']]
     if TWEET:
-        tweettext = 'Taiwan Bank SSL Summary on {} -> '.format(today)
+        tweettext = 'Taiwan Bank SSL status on {} →'.format(today)
         tweettext += gradesummary(grades)
         tweettext += SITE
         tweets = [tweettext]
