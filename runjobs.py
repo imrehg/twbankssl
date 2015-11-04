@@ -105,7 +105,7 @@ if __name__ == '__main__':
     servers = loadServerList()
 
     # Run the assessment in parallel
-    p = Pool(8)
+    p = Pool(4)
     p.map_async(getServerAssessment, servers).get(9999999)
     p.close()
     p.join()
