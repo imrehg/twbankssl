@@ -50,7 +50,16 @@ def parsedate(site, indir):
         return thisResult
 
     f = gzip.open(filename, 'rb')
-    scanresult = json.loads(f.read())
+    try:
+        scandata = f.read()
+        scanresult = json.loads(scandata)
+    except json.scanner.JSONDecodeError:
+        thisResult['lowGrade'] = 'X'
+        thisResult['link'] = site['link']
+        thisResult['url'] = serverName
+        thisResult['endpoints'] = []
+        return thisResult
+
     f.close()
     endpoints = scanresult[0]['endpoints']
 
