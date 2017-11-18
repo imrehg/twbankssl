@@ -1,5 +1,5 @@
 dateutils==0.6.6
-feedgen==0.3.1
+feedgen==0.6.1
 lxml==3.4.3
 oauthlib==0.7.2
 python-dateutil==2.4.2

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 Generates JSON output from the SSL Labs test data scrape
@@ -8,10 +8,10 @@ Run it something like this: `./generatesummary.py > ssltest.json`
 from __future__ import division
 from datetime import datetime, timedelta, time
 import csv
-import gzip
+import lzma
 import os
-import simplejson as json
-from urlparse import urlparse
+import json
+from urllib.parse import urlparse
 from feedgen.feed import FeedGenerator
 
 def loadServerList(inputFile='servers.csv', httpsOnly=True):
@@ -21,7 +21,7 @@ def loadServerList(inputFile='servers.csv', httpsOnly=True):
     inputFile -- a csv file with "Example site,https://www.example.com" line format
     """
     sites = []
-    with open('servers.csv', 'rb') as csvfile:
+    with open('servers.csv', 'r') as csvfile:
         serverreader = csv.reader(csvfile, delimiter=',', quotechar='|')
         for row in serverreader:
             name, link = row
@@ -39,7 +39,7 @@ def parsedate(site, indir):
     indir -- data directory
     """
     serverName = site['url']
-    filename = os.path.join(indir, serverName + ".json.gz")
+    filename = os.path.join(indir, serverName + ".json.xz")
     thisResult = { 'name': site['name'] }
 
     if not os.path.exists(filename):
@@ -49,7 +49,7 @@ def parsedate(site, indir):
         thisResult['endpoints'] = []
         return thisResult
 
-    f = gzip.open(filename, 'rb')
+    f = lzma.open(filename, 'rb')
     try:
         scandata = f.read()
         scanresult = json.loads(scandata)
@@ -65,6 +65,13 @@ def parsedate(site, indir):
 
     thisResult['link'] = site['link']
     thisResult['url'] = serverName
+    try:
+        ev = scanresult[0]['certs'][0]['validationType'] == 'E'
+    except IndexError:
+        ev = False
+    except KeyError:
+        ev = False
+
     ends = []
     for e in endpoints:
         try:
@@ -97,11 +104,6 @@ def parsedate(site, indir):
         except KeyError:
             freak = None
 
-        try:
-            ev = e['details']['cert']['validationType'] == 'E'
-        except KeyError:
-            ev = False
-
         ends += [{'grade': grade,
                   'ipAddress': e['ipAddress'],
                   'hasWarnings': warnings,
@@ -133,7 +135,7 @@ def gradesummary(grades):
 
 if __name__ == '__main__':
     import argparse
-    import ConfigParser
+    import configparser
     import pytz
     from twython import Twython
 
@@ -145,7 +147,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     # Configuration
-    config = ConfigParser.SafeConfigParser({'timezone': 'utc',
+    config = configparser.SafeConfigParser({'timezone': 'utc',
                                             'wayback': 60,
                                             'datadir': 'data',
                                             'site': '',
@@ -236,7 +238,7 @@ if __name__ == '__main__':
     for idx, s in enumerate(sites):
         results[idx]['wayback'] = grades[idx]
     output['results'] = results
-    print json.dumps(output)
+    print(json.dumps(output))
 
     if RSS:
         rssfeed  = fg.rss_str(pretty=True)

@@ -1,17 +1,17 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import argparse
-import ConfigParser
+import configparser
 from datetime import datetime, timedelta
 import csv
-import gzip
+import lzma
 import os
 import pytz
-import simplejson as json
+import json
 import subprocess
 import sys
 from time import sleep
-from urlparse import urlparse
+from urllib.parse import urlparse
 
 # Command line arguments
 parser = argparse.ArgumentParser(description='Batch SSL grade query.')
@@ -20,7 +20,7 @@ parser.add_argument('-q', '--quiet', help='Run quiet', action='store_true', defa
 args = parser.parse_args()
 
 # Configuration
-config = ConfigParser.SafeConfigParser({'timezone': 'utc', 'datadir': 'data'})
+config = configparser.SafeConfigParser({'timezone': 'utc', 'datadir': 'data'})
 config.read(args.config)
 
 QUIET = args.quiet
@@ -32,7 +32,6 @@ sslcmd = [config.get('Scrape', 'ssllabsbin'),
           "-quiet=true",
           "-usecache=true",
           "-maxage=2",
-          "-api=https://api.ssllabs.com/api/v2/",
          ]
 
 # Set output directory
@@ -65,10 +64,9 @@ def getServerAssessment(serverName=None):
     if results:
         resultsjson = json.loads(results)
         if len(resultsjson) > 0 and resultsjson[0]['status'] == 'READY':
-            filename = os.path.join(outdir, serverName + ".json.gz")
-            f = gzip.open(filename, 'wb')
-            f.write(json.dumps(resultsjson))
-            f.close()
+            filename = os.path.join(outdir, serverName + ".json.xz")
+            with lzma.open(filename, 'wb') as outfile:
+                outfile.write(str.encode(json.dumps(resultsjson)))
         else:
             if not QUIET:
                 reason = "Not enough data" if len(resultsjson) == 0 else "Not READY"
@@ -85,7 +83,7 @@ def loadServerList(inputFile='servers.csv', httpsonly=True):
     inputFile -- a csv file with "Example site,https://www.example.com" line format
     """
     servers = []
-    with open('servers.csv', 'rb') as csvfile:
+    with open('servers.csv', 'r') as csvfile:
         serverreader = csv.reader(csvfile, delimiter=',', quotechar='|')
         for row in serverreader:
             name, url = row
