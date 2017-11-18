@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 
 import argparse
 import ConfigParser
@@ -105,7 +105,7 @@ if __name__ == '__main__':
     servers = loadServerList()
 
     # Run the assessment in parallel
-    p = Pool(4)
+    p = Pool(3)
     p.map_async(getServerAssessment, servers).get(9999999)
     p.close()
     p.join()
