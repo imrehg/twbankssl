@@ -38,7 +38,7 @@ sslcmd = [config.get('Scrape', 'ssllabsbin'),
 today = datetime.now(pytz.timezone(config.get('Common', 'timezone'))).date()
 outdir = os.path.join(DATADIR, str(today))
 
-def getServerAssessment(serverName=None):
+def getServerAssessment(serverName=None, trycount=0):
     """ Task to done a single server assessment and save the results
 
     Keyword arguments:
@@ -71,8 +71,13 @@ def getServerAssessment(serverName=None):
             if not QUIET:
                 reason = "Not enough data" if len(resultsjson) == 0 else "Not READY"
                 print("Sleep and retry %s in 3mins: %s" %(serverName, reason))
-            sleep(3*60)
-            getServerAssessment(serverName)
+            if trycount < 3:
+                sleep(3*60)
+                getServerAssessment(serverName, trycount+1)
+            else:
+                if not QUIET:
+                    print("Actually, no more retries: "+serverName)
+                return
     if not QUIET:
         print("Done: "+serverName)
 
