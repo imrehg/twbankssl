@@ -1,6 +1,6 @@
 dateutils==0.6.6
 feedgen==0.9.0
-lxml==3.4.3
+lxml==4.9.1
 oauthlib==0.7.2
 python-dateutil==2.4.2
 pytz==2015.2
